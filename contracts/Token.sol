@@ -31,8 +31,8 @@ contract Token {
     function  transfer(address _to, uint256 _value)
         public
         returns(bool success) {
-
-        require(balanceOf[msg.sender]>= _value);
+           
+        require(balanceOf[msg.sender]>= _value, 'infficient balanceOf of msg.sender');
         require(_to != address(0));
 
         _transfer(msg.sender, _to, _value);
@@ -75,8 +75,8 @@ contract Token {
         public 
         returns(bool success){
         // check approval 
-        require(_value<=balanceOf[_from]);
-        require(_value <= allowance[_from][msg.sender]);
+        require(_value<=balanceOf[_from], 'insufficient balance');
+        require(_value <= allowance[_from][msg.sender], 'insufficient allowance');
         
         //
         allowance[_from][msg.sender] = allowance[_from][msg.sender] - _value;
