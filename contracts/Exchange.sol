@@ -8,9 +8,34 @@ contract Exchange {
     address public feeAccount;
     uint256 public feePercent;
     mapping (address => mapping(address=>uint256)) public tokens;
+    mapping (uint256 => _Order) public orders;
+    uint256 public orderCount;
+
+    // Orders Mapping
 
     event Deposit(address token, address user, uint256 amount, uint256 balance);
-    event Withdraw(address token,address user, uint256 amount, uint256 balanceOf);
+    event Withdraw(address token,address user, uint256 amount, uint256 balanceOf);  
+    event Order(
+        uint256 id,
+        address user,
+        address tokenGet,    
+        uint256 amountGet,
+        address tokenGive,
+        uint256 amountGive,
+        uint256 timestamp
+    )  ;
+
+    // Order to model the order
+    struct  _Order {
+        // Attribute of an order
+        uint256 id;
+        address user;
+        address tokenGet;       
+        uint256 amountGet;
+        address tokenGive;
+        uint256 amountGive;
+        uint256 timestamp;
+    }
 
     constructor(address _feeAccount, uint256 _feePercent) payable {
         feeAccount = _feeAccount;
@@ -50,5 +75,47 @@ contract Exchange {
         returns(uint256) {
 
         return tokens[_token][_user] ;
+    }
+    // Make order
+   
+    function makeOrder(
+        address _tokenGet,
+        uint256 _amountGet,
+        address _tokenGive,
+        uint256 _amountGive
+    ) public{
+        // Token Give (the token they want to spend) - which token, and how much?
+        // token Get (the token they want to receive) -
+        // uint256 id;
+        // address user;
+        // address tokenGet;       
+        // uint256 amountGet;
+        // address tokenGive;
+        // uint256 amountGive;
+        // uint256 timestamp;
+        
+        require(balanceOf(_tokenGive, msg.sender) >= _amountGive);
+        orderCount = orderCount + 1;
+
+        orders[orderCount] = _Order(
+            1,
+            msg.sender,
+            _tokenGet,
+            _amountGet,
+            _tokenGive,
+            _amountGive,
+            block.timestamp
+        );
+
+        // Emit event
+        emit Order(
+              1,
+            msg.sender,
+            _tokenGet,
+            _amountGet,
+            _tokenGive,
+            _amountGive,
+            block.timestamp
+        );
     }
 }
