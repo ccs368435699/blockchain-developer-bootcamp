@@ -121,6 +121,11 @@ describe('Exchange', () => {
             })
         })
     })
+    describe('Checking balances',()=>{
+        it('exchange balance', async ()=>{
+            expect(await exchange.balanceOf(token1.address, user1.address)).to.be.equal(0);
+        } )
+    })
 
     describe('Make order', () => {
         let transaction, result;
