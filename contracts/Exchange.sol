@@ -10,6 +10,7 @@ contract Exchange {
     mapping (address => mapping(address=>uint256)) public tokens;
     mapping (uint256 => _Order) public orders;
     uint256 public orderCount;
+    mapping (uint256 => bool) public orderCancelled;
 
     // Orders Mapping
 
@@ -24,6 +25,15 @@ contract Exchange {
         uint256 amountGive,
         uint256 timestamp
     )  ;
+    event Cancel(
+        uint id,
+        address user,
+        address tokenGet,
+        uint256 amountGet,
+        address tokenGive,
+        uint256 amountGive,
+        uint256 timestamp
+    );
 
     // Order to model the order
     struct  _Order {
@@ -115,6 +125,28 @@ contract Exchange {
             _amountGet,
             _tokenGive,
             _amountGive,
+            block.timestamp
+        );
+    }
+
+    function cancelOrder(uint256 _id) public {
+        
+        // Fethc order
+        _Order storage _order = orders[_id];
+        // Ensure the caller of the fun is the msg.sendr
+        require(address(_order.user) == msg.sender, 'unautherazied !');
+
+        require(_order.id == _id, 'order not exist!');
+        // Cancel the order
+        orderCancelled[_id] = true;
+        //emit event
+        emit Cancel(
+            _order.id,
+            msg.sender,
+            _order.tokenGet,
+            _order.amountGet,
+            _order.tokenGive,
+            _order.amountGive,
             block.timestamp
         );
     }
