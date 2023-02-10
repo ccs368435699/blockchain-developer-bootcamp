@@ -82,7 +82,7 @@ contract Exchange {
         emit Deposit(_token, msg.sender, _amount, tokens[_token][msg.sender]);
     }
 
-    // Withdraw Toke
+    // Withdraw Token
     function withdrawToken(address _token, uint256 _amount) public {
         require(tokens[_token][msg.sender] >= _amount);
         // Transfer tokens to user

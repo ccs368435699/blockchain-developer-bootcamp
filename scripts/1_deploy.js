@@ -21,7 +21,7 @@ async function main(){
 
     const mDai = await Token.deploy('mDAI', 'mDAI', '1000000');
     await mDai.deployed()
-    console.log(`mDai address is  ${mDai.address}`);
+    console.log(`mDai Deployed to: ${mDai.address}`);
 
     const exchange = await Exchange.deploy(accounts[1].address, 10);    
     await exchange.deployed();
