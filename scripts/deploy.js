@@ -7,6 +7,8 @@
 const hre = require("hardhat");
 
 async function main() {
+  let provider = hre.ethers.getDefaultProvider('http://127.0.0.1:8545')
+
   const currentTimestampInSeconds = Math.round(Date.now() / 1000);
   const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
   const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
@@ -21,6 +23,8 @@ async function main() {
   console.log(
     `Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
   );
+ 
+ 
 }
 
 // We recommend this pattern to be able to use async/await everywhere
