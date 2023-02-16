@@ -10,10 +10,10 @@ export const provider = (state = {}, action) => {
                 ...state,
                 chainId: action.chainId
             }
-        case 'Account_LOADED':
+        case 'ACCOUNT_LOADED':
             return {
                 ...state,
-                chainId: action.account
+                account: action.account
             }
         case 'ETHER_BALANCE_LOADED':
             return {
@@ -41,6 +41,20 @@ export const tokens = (state = { load: false, contracts: [], symbols: [] }, acti
                 contracts: [...state.contracts, action.token],
                 symbols: [...state.symbols, action.symbol]
             }
+        // case 'EXCHANGE_LOADED':
+        //     return {
+        //         ...state,
+        //         loaded: true,
+        //         contracts: [...state.contracts, action.token]                
+        //     }
+
+        default:
+            return state
+    }
+}
+
+export const exchange = (state={load: false, contracts: []}, action)=>{
+    switch (action.type) {
         case 'EXCHANGE_LOADED':
             return {
                 ...state,

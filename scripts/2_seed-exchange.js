@@ -46,7 +46,7 @@ async function main() {
     // Set up exchange users
     const user1 = accounts[0];
     const user2 = accounts[1];
-    amount = tokens(10000);
+    amount = tokens(1000);
 
     // user1 approves 10,000 DApp ...
     transaction = await DApp.connect(user1).approve(exchange.address, amount);
@@ -55,12 +55,12 @@ async function main() {
 
     // user1 deposits 10,000 DApp ...
     transaction = await exchange.connect(user1).depositToken(DApp.address, amount);
-    await transaction.wait();
+    await transaction.wait(1);
     console.log(`Deposited ${amount} tokens from ${user1.address} \n`)
 
     // user2 approves 10,000 mETH ...
     transaction = await DApp.connect(user2).approve(exchange.address, amount);
-    await transaction.wait();
+    await transaction.wait(1);
     console.log(`Approved ${amount} tokens from ${user2.address} \n`)
 
     // user2 deposits  mETH ...
@@ -80,7 +80,7 @@ async function main() {
  
 
     // User1 cancels order
-    console.log(result);
+    console.log(result);//??events为[]
     orderId = result.events[0].args.id;
     transaction = await exchange.connect(user1).cancelOrder(orderId);
     result = await transaction.wait();

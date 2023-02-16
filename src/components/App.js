@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { ethers } from 'ethers';
 import '../App.css';
 
-import TOKEN_ABI from '../abi/Token.json';
 import config from '../config.json'
 
 import { 
@@ -12,6 +11,7 @@ import {
   loadTokens,
   loadExchange 
 } from '../store/interactions';
+import Navbar from './Navbar';
 import { useDispatch } from 'react-redux';
 
 function App() {
@@ -46,6 +46,7 @@ function App() {
   return (
     <div>
       {/* Navbar. */}
+      <Navbar />
       <main className='exchange grid'>
         <section className='exchange__section--left grid'>
           {/* Markets. */}
