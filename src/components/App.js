@@ -23,8 +23,14 @@ function App() {
     const chainId = await loadNetwork(provider, dispatch) 
     console.log('chainId', chainId)
 
-    const account = await loadAccount(provider, dispatch);
-    console.log('account:', account)
+    window.ethereum.on('accountsChanged',async ()=>{
+      const account = await loadAccount(provider, dispatch);
+      console.log('account:', account)
+    })
+    window.ethereum.on('chainChanged',async ()=>{
+      window.location.reload()
+    })
+   
 
     const addresses = [
       config[chainId].DApp.address,

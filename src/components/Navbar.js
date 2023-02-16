@@ -1,23 +1,62 @@
 import logo from '../assets/logo.png';
-import { useSelector } from 'react-redux';
+import eth from '../assets/eth.svg';
+import { useDispatch, useSelector } from 'react-redux';
+import Blockie from 'react-blockies'
+
+import { loadAccount } from '../store/interactions';
+import config from '../config.json'
 
 
 const Navbar = ()=>{
+    const provider = useSelector(state=>state.provider.connection);
+    const chainId = useSelector(state=>state.provider.chainId);
     const account = useSelector(state=>state.provider.account);
     const balance = useSelector(state=>state.provider.balance);
-    console.log('account:',account)
+   
+    const dispatch = useDispatch()
+    const networkHandler= async (e)=>{
+        // load account ...
+        console.log('123',e.target.value)
+        try {
+            await window.ethereum.request({
+                method:'wallet_switchEthereumChain',
+                params: [{ chainId: e.target.value }]
+            })
+        } catch (err){
+            console.log(err)
+        }
+       
+    }
+    const connectHandler= async ()=>{
+        // load account ...
+        await loadAccount(provider, dispatch)
+    }
+
     return (
         <div className="exchange__header grid">
             <div className="exchange__header--brand flex">
-                <img src={logo} className="logo" alt="DApp"></img>
+                <img src={logo} className="logo" alt="DApp Logo"></img>
                 <h1>DApp Token Exchange</h1>
             </div>
             <div className="exchange__header--networks flex">
+                <img src= {eth} alt="ETH Logo" className='Eth logo' />
+                {chainId && (
+                     <select 
+                     name="networks" 
+                     id="networks" 
+                     value={config[chainId] ?`0x${chainId.toString(16)} )`:'0'} 
+                     onChange={networkHandler}>
+                         <option value="0" disabled>Select Networks</option>
+                         <option value="0x7A69">Localhost</option>
+                         <option value="0x2A">Kovan</option>
+                     </select>
+                )}
 
+               
             </div>
             <div className="exchange__header--account flex">
                 {
-                    balance ?(
+                    balance ? (
                         <p>
                         <small>My Balance</small>
                         {Number(balance).toFixed(4)}
@@ -32,9 +71,29 @@ const Navbar = ()=>{
                 }
               
                 {
-                    account ?
-                    (<a href="">{account.slice(0,5)+'...'+account.slice(38)}</a>)
-                    : (<a href=""></a>)
+                    account ?(
+                        <a 
+                        href={config[chainId]?`${config[chainId].explorerURL}/address/${account}`: '#'}
+                        target='_blank'
+                        rel='norefferer'
+                        >
+                            {account.slice(0,5)+'...'+account.slice(38)}
+                            <Blockie 
+                                seed={account}
+                                className = "identicon"
+                                size = {10}
+                                scale = {3}
+                                gbColor = "#2187D0"
+                                spotColor='#767F92'                                
+                            />
+                        </a>
+                    ) : (
+                        <button className='button'
+                        onClick={
+                            connectHandler
+                        }
+                        >connection</button>
+                    )
                 }
             </div>
         </div>

@@ -11,6 +11,10 @@
         },
         "mDAI": {
             "address": "0xc5a5C42992dECbae36851359345FE25997F5C42d"
-        }
+        },
+        "explorerURL" : "#"
+    },
+    "42": {
+        "explorerURL": "https://kovan.etherscan.io"
     }
 }
