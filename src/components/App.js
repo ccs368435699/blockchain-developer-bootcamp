@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { ethers } from 'ethers';
+
 import '../App.css';
 
 import config from '../config.json'
@@ -13,7 +13,9 @@ import {
 } from '../store/interactions';
 import Navbar from './Navbar';
 import Markets from './Markets';
+import Balance from './Balance';
 import { useDispatch } from 'react-redux';
+
 
 function App() {
   const dispatch = useDispatch();
@@ -58,8 +60,8 @@ function App() {
         <section className='exchange__section--left grid'>
           {/* Markets. */}
           <Markets />
-
           {/* Balance. */}
+          <Balance />
 
           {/* Order . */}
         </section>
