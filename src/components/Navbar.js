@@ -15,8 +15,8 @@ const Navbar = ()=>{
    
     const dispatch = useDispatch()
     const networkHandler= async (e)=>{
-        // load account ...
-        console.log('123',e.target.value)
+        
+        // load account ...        
         try {
             await window.ethereum.request({
                 method:'wallet_switchEthereumChain',
@@ -52,7 +52,6 @@ const Navbar = ()=>{
                      </select>
                 )}
 
-               
             </div>
             <div className="exchange__header--account flex">
                 {

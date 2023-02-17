@@ -1,3 +1,5 @@
+import { act } from "react-dom/test-utils"
+
 export const provider = (state = {}, action) => {
     switch (action.type) {
         case 'PROVIDER_LOADED':
@@ -24,15 +26,19 @@ export const provider = (state = {}, action) => {
             return state
     }
 }
-
-export const tokens = (state = { load: false, contracts: [], symbols: [] }, action) => {
+const DEFAULT_TOKENS_STATE ={
+    load: false,
+    contracts: [],
+    symbols: []
+}
+export const tokens = (state = DEFAULT_TOKENS_STATE, action) => {
     switch (action.type) {
         case 'TOKEN_1_LOADED':
             return {
                 ...state,
                 loaded: true,
-                contracts: [...state.contracts, action.token],
-                symbols: [...state.symbols, action.symbol]
+                contracts: [action.token],
+                symbols: [action.symbol]
             }
         case 'TOKEN_2_LOADED':
             return {
@@ -40,26 +46,20 @@ export const tokens = (state = { load: false, contracts: [], symbols: [] }, acti
                 loaded: true,
                 contracts: [...state.contracts, action.token],
                 symbols: [...state.symbols, action.symbol]
-            }
-        // case 'EXCHANGE_LOADED':
-        //     return {
-        //         ...state,
-        //         loaded: true,
-        //         contracts: [...state.contracts, action.token]                
-        //     }
+            }        
 
         default:
             return state
     }
 }
 
-export const exchange = (state={load: false, contracts: []}, action)=>{
+export const exchange = (state={load: false, contract: {}}, action)=>{
     switch (action.type) {
         case 'EXCHANGE_LOADED':
             return {
                 ...state,
                 loaded: true,
-                contracts: [...state.contracts, action.token]                
+                contract: action.contract          
             }
 
         default:
