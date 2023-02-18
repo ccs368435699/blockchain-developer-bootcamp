@@ -29,6 +29,7 @@ export const provider = (state = {}, action) => {
 const DEFAULT_TOKENS_STATE = {
     load: false,
     contracts: [],
+    balances: [],
     symbols: []
 }
 export const tokens = (state = DEFAULT_TOKENS_STATE, action) => {
@@ -63,8 +64,17 @@ export const tokens = (state = DEFAULT_TOKENS_STATE, action) => {
     }
 }
 
-export const exchange = (state = { load: false, contract: {} }, action) => {
-    
+
+const DEFAULT_EXCHANE_STATE ={
+    load: false,
+    contract: {}, 
+    events:[],
+    transaction:{}, 
+    transferInProgress: false
+}
+
+export const exchange = (state = DEFAULT_EXCHANE_STATE, action) => {
+
     switch (action.type) {
         case 'EXCHANGE_LOADED':
             return {
@@ -73,9 +83,48 @@ export const exchange = (state = { load: false, contract: {} }, action) => {
                 contract: action.exchange
             }
         case 'EXCHANGE_TOKEN_1_BALANCE_LOADED':
+
             return {
                 ...state,
                 balances: [action.balance]
+            }
+        case 'EXCHANGE_TOKEN_2_BALANCE_LOADED':
+
+            return {
+                ...state,
+                balances: [...state.balances, action.balance]
+            }
+        case 'TRANSFER_REQUEST':
+            return {
+                ...state,
+                transaction: {
+                    transactionType: 'Transfer',
+                    isPending: true,
+                    isSuccessful: false
+                },
+                transferInProgress: true
+            }
+        case 'TRANSFER_SUCCESS':
+            return {
+                ...state,
+                transaction: {
+                    transactionType: 'Transfer',
+                    isPending: false,
+                    isSuccessful: true
+                },
+                transferInProgress: false,
+                events: [action.event, ...state.events]
+            }
+        case 'TRANSFER_FAIL':
+            return {
+                ...state,
+                transaction: {
+                    transactionType: 'Transfer',
+                    isPending: false,
+                    isSuccessful: false,
+                    isError: true
+                },
+                transferInProgress: false
             }
 
 
