@@ -68,6 +68,11 @@ export const subscribeToEvents = (exchange, dispatch)=>{
         // Notify app think withdraw was successful!
         dispatch({type: 'TRANSFER_SUCCESS', event})
     })
+    exchange.on('Order', (id, user, tokenGet, amountGet, tokenGive, amountGive, timestamp, event)=>{
+        // Notify app think withdraw was successful!
+        const order = event.args;
+        dispatch({type: 'NEW_ORDER_SUCCESS', order, event})
+    })
 }
 
 
@@ -123,4 +128,28 @@ export const transferTokens = async (provider, exchange, transferType, token, am
     }
     transaction.wait();
 }
+
+//-----------------------------------------------------------------------
+// ORDERS（BUY & SELL）
+
+export const makeBuyOrder = async (provider, exchange, tokens, order, dispatch)=>{
+    console.log(111,provider, exchange, tokens, order, dispatch)
+    
+    const tokenGet = tokens[0].address;
+    const amountGet =ethers.utils.parseUnits(order.amount, 18);
+    const tokenGive = tokens[1].address;
+    const amountGive = ethers.utils.parseUnits((order.amount * order.price).toString(), 18);
+
+    dispatch({type: 'NEW_ORDER_REQUEST'});
+
+    try {
+        const signer = await provider.getSigner();
+        const transaction = await exchange.connect(signer).makeBuyOrder(tokenGet, amountGet, tokenGive, amountGive);
+        await transaction.wait();
+    }catch(error){
+        dispatch({type: 'NEW_ORDER_FAIL'})
+    }
+   
+}
+
 

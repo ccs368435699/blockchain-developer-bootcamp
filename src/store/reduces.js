@@ -65,15 +65,20 @@ export const tokens = (state = DEFAULT_TOKENS_STATE, action) => {
 }
 
 
-const DEFAULT_EXCHANE_STATE ={
+const DEFAULT_EXCHANE_STATE = {
     load: false,
-    contract: {}, 
-    events:[],
-    transaction:{}, 
+    contract: {},
+    events: [],
+    transaction: {},
+    allOrders: {
+        loaded: false,
+        data:[]
+    },
     transferInProgress: false
 }
 
 export const exchange = (state = DEFAULT_EXCHANE_STATE, action) => {
+    let index, data;
 
     switch (action.type) {
         case 'EXCHANGE_LOADED':
@@ -127,6 +132,46 @@ export const exchange = (state = DEFAULT_EXCHANE_STATE, action) => {
                 transferInProgress: false
             }
 
+        case 'NEW_ORDER_REQUEST':
+            return {
+                ...state,
+                transaction: {
+                    transactionType: 'New Order',
+                    isPending: true,
+                    isSuccessful: false
+                },
+            }
+        case 'NEW_ORDER_SUCCESS':
+            // Prevent duplicate orders
+            index = state.allOrders.data.findIndex(order=>order.id === action.order.id);    
+            
+            if (index === -1){
+                data = [...state.allOrders.data, action.order]
+            } else {
+                data = state.allOrders.data
+            }
+            return {
+                ...state,
+                allOrders: {
+                    ...state.allOrders,
+                    data: [...state.allOrders.data, action.order]
+                },
+                transaction: {
+                    transactionType: 'New Order',
+                    isPending: false,
+                    isSuccessful: true
+                },
+            }
+        case 'NEW_ORDER_FAIL':
+            return {
+                ...state,
+                transaction: {
+                    transactionType: 'New Order',
+                    isPending: false,
+                    isSuccessful: false,
+                    isError: true
+                },
+            }
 
         default:
             return state
