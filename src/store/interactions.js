@@ -64,6 +64,10 @@ export const subscribeToEvents = (exchange, dispatch)=>{
         // Notify app think transfer was successful!
         dispatch({type: 'TRANSFER_SUCCESS', event})
     })
+    exchange.on('Withdraw', (token, user, amount, balance, event)=>{
+        // Notify app think withdraw was successful!
+        dispatch({type: 'TRANSFER_SUCCESS', event})
+    })
 }
 
 
@@ -98,13 +102,20 @@ export const transferTokens = async (provider, exchange, transferType, token, am
 
     try {
         const signer = await provider.getSigner();
-        const amountToTransfer = ethers.utils.parseUnits(amount.toString(), 18);
+        const amountToTransfer = ethers.utils.parseUnits(amount.toString(), 'ether');
         console.log(111,amountToTransfer)
-        transaction = await token.connect(signer).approve(exchange.address, amountToTransfer);
-        transaction.wait();    
-        transaction = await exchange.connect(signer).depositToken(token.address, amount)
-        transaction.wait();
-        dispatch({type: 'TRANSFER_SUCCESS'})
+        
+        if(transferType = 'Deposit'){
+            transaction = await token.connect(signer).approve(exchange.address, amountToTransfer);
+            transaction.wait();    
+            transaction = await exchange.connect(signer).depositToken(token.address, amountToTransfer);
+            transaction.wait();
+            // dispatch({type: 'TRANSFER_SUCCESS'})
+        } else {
+            transaction = await exchange.connect(signer).withdrawToken(token.address, amountToTransfer);
+            transaction.wait();
+        }
+       
 
     }catch(err){
         dispatch({type: 'TRANSFER_FAIL'})
