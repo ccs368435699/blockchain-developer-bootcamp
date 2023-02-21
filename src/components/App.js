@@ -16,7 +16,9 @@ import Navbar from './Navbar';
 import Markets from './Markets';
 import Balance from './Balance';
 import Order from './Order';
+import OrderBook from './OrderBook';
 import { useDispatch } from 'react-redux';
+
 
 
 function App() {
@@ -78,6 +80,7 @@ function App() {
           {/* Trades. */}
 
           {/* OrderBook. */}
+          <OrderBook />
         </section>
       </main>
     </div>

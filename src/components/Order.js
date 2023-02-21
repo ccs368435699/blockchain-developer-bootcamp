@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { makeBuyOrder } from "../store/interactions";
+import { makeBuyOrder, makeSellOrder } from "../store/interactions";
 
 
 const Order = () => {
@@ -41,6 +41,7 @@ const Order = () => {
     const sellHandler = (e) => {
         console.log('sellHandler')
         e.preventDefault();
+        makeSellOrder(provider, exchange, tokens, { amount, price }, dispatch);
         setAmount(0);
         setPrice(0);
     }

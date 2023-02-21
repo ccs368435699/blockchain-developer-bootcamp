@@ -150,17 +150,19 @@ export const exchange = (state = DEFAULT_EXCHANE_STATE, action) => {
             } else {
                 data = state.allOrders.data
             }
+            
             return {
                 ...state,
                 allOrders: {
                     ...state.allOrders,
-                    data: [...state.allOrders.data, action.order]
+                    data
                 },
                 transaction: {
                     transactionType: 'New Order',
                     isPending: false,
                     isSuccessful: true
                 },
+                events: [action.event, ...action.events]
             }
         case 'NEW_ORDER_FAIL':
             return {
