@@ -17,7 +17,7 @@ const Order = () => {
     const sellRef = useRef(null);
 
     const tabHandler = (e) => {
-        console.log(e.target.className)
+       
         if (e.target.className !== buyRef.current.className) {
             e.target.className = 'tab tab--active';
             buyRef.current.className = 'tab';

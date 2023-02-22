@@ -1,3 +1,4 @@
+import { act } from "react-dom/test-utils"
 
 
 export const provider = (state = {}, action) => {
@@ -86,6 +87,14 @@ export const exchange = (state = DEFAULT_EXCHANE_STATE, action) => {
                 ...state,
                 loaded: true,
                 contract: action.exchange
+            }
+        case 'ALL_ORDERS_LOADED':
+            return {
+                ...state,
+                allOrders: {
+                    loaded: true,
+                    data: action.allOrders
+                }
             }
         case 'EXCHANGE_TOKEN_1_BALANCE_LOADED':
 
