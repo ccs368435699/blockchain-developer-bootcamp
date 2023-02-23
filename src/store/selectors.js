@@ -1,5 +1,5 @@
 import { createSelector } from "reselect";
-import { get, groupBy, reject } from "lodash";
+import { get, groupBy, reject, maxBy, minBy } from "lodash";
 import moment from "moment";
 import { ethers } from "ethers";
 
@@ -119,6 +119,37 @@ export const priceChartSelector = createSelector(
 
         orders = orders.filter((o) => o.tokenGet === tokens[0].address || o.tokenGet === tokens[1].address);
         orders = orders.filter((o) => o.tokenGive === tokens[0].address || o.tokenGive === tokens[1].address)
-        console.log(1, orders)
+        
+        orders = orders.sort((a, b)=>a.timestamp - b.timestamp);
+        //
+        orders = orders.map((o)=>decorateOrder(o, tokens));
+        orders = groupBy(orders, (o)=>moment.unix(o.timestamp).startOf('hour').format());
+        const hours = Object.keys(orders);
+
+        const grapData = hours.map((hour)=>{
+
+            const group = orders[hour];
+
+            const open = group[0];
+            const high = maxBy(group, 'tokenPrice');
+            const low = minBy(group, 'tokenPrice');
+            const close = group[group.length - 1];
+            return {
+                x: new Date(hour),
+                y: [open.tokenPrice, high.tokenPrice, low.tokenPrice, close.tokenPrice]
+            }
+        })
+
+        return grapData;
+        
+        // console.log(1, {
+        //     series: [{
+        //         data: grapData
+        //     }]
+        // })
     }
 )
+
+const buildGraphData = (orders)=>{
+    
+}

@@ -11,6 +11,8 @@ const PriceChart = () => {
 
     const priceChart = useSelector(priceChartSelector)
 
+    console.log(1, priceChart)
+
     return (
         <div className="component exchange__chart">
             <div className="component__header flex-between">
