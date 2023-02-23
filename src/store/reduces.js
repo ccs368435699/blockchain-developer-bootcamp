@@ -73,7 +73,7 @@ const DEFAULT_EXCHANE_STATE = {
     transaction: {},
     allOrders: {
         loaded: false,
-        data:[]
+        data: []
     },
     transferInProgress: false
 }
@@ -88,6 +88,24 @@ export const exchange = (state = DEFAULT_EXCHANE_STATE, action) => {
                 loaded: true,
                 contract: action.exchange
             }
+            // ORDERS LOADED (CANCELLED, FILLED)
+        case 'CANCELLED_ORDERS_LOADED':
+            return {
+                ...state,
+                cancelledOrders: {
+                    loaded: true,
+                    data: action.cancelledOrders
+                }
+            }
+
+        case 'FILLED_ORDERS_LOADED': 
+            return {
+                ...state,
+                filledOrder: {
+                    load: true,
+                    data: action.filledOrder
+                }
+            }    
         case 'ALL_ORDERS_LOADED':
             return {
                 ...state,
@@ -152,14 +170,14 @@ export const exchange = (state = DEFAULT_EXCHANE_STATE, action) => {
             }
         case 'NEW_ORDER_SUCCESS':
             // Prevent duplicate orders
-            index = state.allOrders.data.findIndex(order=>order.id === action.order.id);    
-            
-            if (index === -1){
+            index = state.allOrders.data.findIndex(order => order.id === action.order.id);
+
+            if (index === -1) {
                 data = [...state.allOrders.data, action.order]
             } else {
                 data = state.allOrders.data
             }
-            
+
             return {
                 ...state,
                 allOrders: {

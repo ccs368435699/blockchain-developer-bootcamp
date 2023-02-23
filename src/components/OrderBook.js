@@ -30,12 +30,12 @@ const OrderBook = () => {
                             </thead>
                             <tbody>
                                 {
-                                    orderBook && orderBook.sellOrders.map((order, index) => {                                        
-                                       console.log(33, typeof  order.token0Amount)
+                                    orderBook && orderBook.sellOrders.map((order, index) => {
+                                        console.log(33, typeof order.token0Amount)
                                         return (
-                                            <tr key = {index}>
+                                            <tr key={index}>
                                                 <td>{order.token0Amount}</td>
-                                                <td style={{color: `${order.orderTypeClass}`}}>{order.tokenPrice}</td>
+                                                <td style={{ color: `${order.orderTypeClass}` }}>{order.tokenPrice}</td>
                                                 <td>{order.token1Amount}</td>
                                             </tr>
                                         )
@@ -50,7 +50,10 @@ const OrderBook = () => {
 
 
                 <div className="divider"></div>
-
+                ｛
+                !orderBook || orderBook.buyOrders.length === 0 ? (
+                <p className="flex-center">No Buy Order</p>
+                ) : (
                 <table className="exchange__orderbook--buy">
                     <caption>Buying</caption>
                     <thead>
@@ -61,13 +64,24 @@ const OrderBook = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
+                    {
+                                    orderBook && orderBook.buyOrders.map((order, index) => {
+                                        console.log(3, typeof order.token0Amount)
+                                        return (
+                                            <tr key={index}>
+                                                <td>{order.token0Amount}</td>
+                                                <td style={{ color: `${order.orderTypeClass}` }}>{order.tokenPrice}</td>
+                                                <td>{order.token1Amount}</td>
+                                            </tr>
+                                        )
+                                    })
+                                }
                     </tbody>
                 </table>
+                )
+
+                ｝
+
             </div>
         </div>
     )
