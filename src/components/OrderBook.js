@@ -29,7 +29,7 @@ const OrderBook = () => {
                             <tbody>
                                 {
                                     orderBook && orderBook.sellOrders.map((order, index) => {
-                                        console.log(33, typeof order.token0Amount)
+                                        
                                         return (
                                             <tr key={index}>
                                                 <td>{order.token0Amount}</td>
@@ -62,7 +62,7 @@ const OrderBook = () => {
                             <tbody>
                                 {
                                     orderBook && orderBook.buyOrders.map((order, index) => {
-                                        console.log(3, typeof order.token0Amount)
+                                        
                                         return (
                                             <tr key={index}>
                                                 <td>{order.token0Amount}</td>

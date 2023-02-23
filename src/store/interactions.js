@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import TOKEN_ABI from '../abi/Token.json'; 
 import EXCHANGE_ABI from '../abi/Exchange.json'; 
-import { exchange } from "./reduces";
+
 
 export const loadProvider = (dispatch)=>{
     const connection = new ethers.providers.Web3Provider(window.ethereum);

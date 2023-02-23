@@ -18,6 +18,7 @@ import Markets from './Markets';
 import Balance from './Balance';
 import Order from './Order';
 import OrderBook from './OrderBook';
+import PriceChart from './PriceChart';
 import { useDispatch } from 'react-redux';
 
 
@@ -77,7 +78,7 @@ function App() {
 
         <section className='exchange__section--right grid'>
           {/* PriceChart. */}
-
+          <PriceChart />
           {/* Transaction. */}
 
           {/* Trades. */}
