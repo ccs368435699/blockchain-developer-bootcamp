@@ -1,13 +1,30 @@
 import { createSelector } from "reselect";
-import { get, groupBy } from "lodash";
-import moment, { months } from "moment";
+import { get, groupBy, reject } from "lodash";
+import moment from "moment";
 import { ethers } from "ethers";
 
 const tokens = state=> get(state, 'tokens.contracts')
-const allOrder = state => get(state, 'exchange.allOrders.data', []);
+const allOrders = state => get(state, 'exchange.allOrders.data', []);
+const cancelledOrders = state => get(state, 'exchange.cancelledOrders.data', []);
+const filledOrders = state =>get(state, 'exchange.filledOrders.data', []);
 
-const decorateOrder = (order, tokens) =>{
-    console.log(9,order)
+// cancelledOrders filledOrders 没有完成
+const openOrders = state=> {
+    const all = allOrders(state);    
+    const filled = filledOrders(state);    
+    const cancelled = cancelledOrders(state);
+
+    const openOrders = reject(all, (order)=>{
+        const orderFilled = filled.some((o)=>o.id.toString() === order.id.toString());
+        const orderCancelled = cancelled.some((o)=>o.id.toString() === order.id.toString());
+
+        return (orderFilled || orderCancelled)
+    })
+
+    return openOrders
+}
+
+const decorateOrder = (order, tokens) =>{    
     let token0Amount, token1Amount; //要还原成ｎｕｍｂｅｒ类型。？？？？？
 
     if(order.tokenGive === tokens[1].address){
@@ -35,7 +52,8 @@ const decorateOrder = (order, tokens) =>{
 // ------------------------------------------------------------------------
 // ORDER BOOK
 export const orderBookSelect = createSelector(
-    allOrder, 
+    // openOrders, 
+    allOrders,   
     tokens, 
     (orders, tokens)=>{
     // console.log('orderbookselector', orders, tokens)
@@ -48,8 +66,7 @@ export const orderBookSelect = createSelector(
     orders = groupBy(orders, 'orderType');
 
     const buyOrders = get(orders, 'buy', []);
-    console.log(11, buyOrders)
-
+    
     orders = {
         ...orders,
         buyOrders: buyOrders.sort((a, b)=>b.tokenPrice - a.tokenPrice)

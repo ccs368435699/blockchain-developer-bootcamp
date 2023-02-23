@@ -11,10 +11,8 @@ const OrderBook = () => {
         <div className="component exchange__orderbook">
             <div className="component__header flex-between">
                 <h2>Order Book</h2>
-
             </div>
             <div className="flex">
-
                 {
                     (!orderBook || orderBook.sellOrders.length === 0) ? (
                         <p className="flex-center">No Sell Order</p>
@@ -47,24 +45,22 @@ const OrderBook = () => {
                     )
                 }
 
-
-
                 <div className="divider"></div>
-                ｛
-                !orderBook || orderBook.buyOrders.length === 0 ? (
-                <p className="flex-center">No Buy Order</p>
-                ) : (
-                <table className="exchange__orderbook--buy">
-                    <caption>Buying</caption>
-                    <thead>
-                        <tr>
-                            <th>{symbols && symbols[0]}<img src={sort} alt="Sort" /></th>
-                            <th>{symbols && symbols[0]}/{symbols && symbols[1]}<img src={sort} alt="Sort" /></th>
-                            <th>{symbols && symbols[1]}<img src={sort} alt="Sort" /></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {
+                {
+                    (!orderBook || orderBook.buyOrders.length === 0) ? (
+                        <p className="flex-center">No Buy Order</p>
+                    ) : (
+                        <table className="exchange__orderbook--buy">
+                            <caption>Buying</caption>
+                            <thead>
+                                <tr>
+                                    <th>{symbols && symbols[0]}<img src={sort} alt="Sort" /></th>
+                                    <th>{symbols && symbols[0]}/{symbols && symbols[1]}<img src={sort} alt="Sort" /></th>
+                                    <th>{symbols && symbols[1]}<img src={sort} alt="Sort" /></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
                                     orderBook && orderBook.buyOrders.map((order, index) => {
                                         console.log(3, typeof order.token0Amount)
                                         return (
@@ -76,11 +72,13 @@ const OrderBook = () => {
                                         )
                                     })
                                 }
-                    </tbody>
-                </table>
-                )
+                            </tbody>
+                        </table>
+                    )
+                }
 
-                ｝
+
+
 
             </div>
         </div>
