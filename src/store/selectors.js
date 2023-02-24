@@ -8,7 +8,9 @@ const allOrders = state => get(state, 'exchange.allOrders.data', []);
 const cancelledOrders = state => get(state, 'exchange.cancelledOrders.data', []);
 const filledOrders = state => get(state, 'exchange.filledOrders.data', []);
 
-// cancelledOrders filledOrders 没有完成
+const GREEN = '#25CE8F';
+const RED = '#F45353';
+// cancelledOrders filledOrders 没有數據 完成
 const openOrders = state => {
     const all = allOrders(state);
     const filled = filledOrders(state);
@@ -48,6 +50,62 @@ const decorateOrder = (order, tokens) => {
         formattedTimestamp: moment.unix(order.timestamp).format('h:mm:ssa d MMM D')
     })
 }
+// ------------------------------------------------------------------------
+// ALL FILL ORDERS
+export const filledOrdersSelector = createSelector(
+    // filledOrders,
+    allOrders,
+    tokens,
+    (orders, tokens) => {
+        if (!tokens[0] || !tokens[1]) { return }
+
+        orders = orders.filter((o) => o.tokenGet === tokens[0].address || o.tokenGet === tokens[1].address);
+        orders = orders.filter((o) => o.tokenGive === tokens[0].address || o.tokenGive === tokens[1].address)
+
+
+        orders = orders.sort((a, b) => a.timestamp - b.timestamp);
+
+        orders = decorateFilledOrders(orders, tokens);
+
+
+        console.log(11, orders)
+        return orders;
+    }
+)
+
+const decorateFilledOrders = (orders, tokens) => {
+    let previousOrder = orders[0];
+
+    return (
+        orders.map((order) => {
+            order = decorateOrder(order, tokens);
+            order = decorateFilledOrder(order, previousOrder);
+            previousOrder = order;
+
+            return order;
+        })
+    )
+}
+
+const decorateFilledOrder = (order, previousOrder) => {
+    return ({
+        ...order,
+        tokenPriceClass: tokenPriceClass(order.tokenPrice, order.id, previousOrder),
+    })
+}
+
+const tokenPriceClass = (tokenPrice, id, previousOrder)=>{
+    if(previousOrder.id === order.id){
+        return GREEN;
+    }
+
+    if(previousOrder.tokenPrice <= tokenPrice){
+        return GREEN
+    } else {
+        return RED
+    }
+}
+
 
 // ------------------------------------------------------------------------
 // ORDER BOOK
@@ -94,8 +152,7 @@ const decorateOrderBookOrders = (orders, tokens) => {
     )
 }
 
-const GREEN = '#25CE8F';
-const RED = '#F45353';
+
 
 const decorateOrderBookOrder = (order, tokens) => {
     const orderType = order.tokenGive === tokens[1].address ? 'buy' : 'sell';
@@ -123,29 +180,14 @@ export const priceChartSelector = createSelector(
         orders = orders.sort((a, b) => a.timestamp - b.timestamp);
         //
         orders = orders.map((o) => decorateOrder(o, tokens));
-        // orders = groupBy(orders, (o) => moment.unix(o.timestamp).startOf('hour').format());
-        // const hours = Object.keys(orders);
 
-        // const grapData = hours.map((hour) => {
-
-        //     const group = orders[hour];
-
-        //     const open = group[0];
-        //     const high = maxBy(group, 'tokenPrice');
-        //     const low = minBy(group, 'tokenPrice');
-        //     const close = group[group.length - 1];
-        //     return {
-        //         x: new Date(hour),
-        //         y: [open.tokenPrice, high.tokenPrice, low.tokenPrice, close.tokenPrice]
-        //     }
-        // })
         let secondLastOrder, lastOrder;
-        [secondLastOrder, lastOrder] = orders.slice(orders.length-2, orders.length);
+        [secondLastOrder, lastOrder] = orders.slice(orders.length - 2, orders.length);
         const lastPrice = get(lastOrder, 'tokenPrice', 0);
-        const secondLastPrice = get (secondLastOrder, 'tokenPrice', 0);
+        const secondLastPrice = get(secondLastOrder, 'tokenPrice', 0);
 
 
-        return ({            
+        return ({
             lastPrice,
             lastPriceChange: (lastPrice >= secondLastPrice ? '+' : '-'),
             series: [{
