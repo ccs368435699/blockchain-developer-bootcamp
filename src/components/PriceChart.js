@@ -2,14 +2,18 @@ import { useSelector } from "react-redux";
 import Chart from 'react-apexcharts';
 import Banner from "./Banner";
 
-import {options, series} from './PriceChart.config'
-import {priceChartSelector} from '../store/selectors'
+import arrowDown from '../assets/down-arrow.svg';
+import arrowUp from '../assets/up-arrow.svg';
+
+import { options, defaultSeries } from './PriceChart.config'
+import { priceChartSelector } from '../store/selectors'
 
 const PriceChart = () => {
     const account = useSelector(state => state.provider.account);
     const symbols = useSelector(state => state.tokens.symbols);
 
-    const priceChart = useSelector(priceChartSelector)
+    const priceChart = useSelector(priceChartSelector);
+
 
     console.log(1, priceChart)
 
@@ -18,24 +22,34 @@ const PriceChart = () => {
             <div className="component__header flex-between">
                 <div className="flex">
                     <h2>{symbols && `${symbols[0]}/${symbols[1]}`}</h2>
+                    {
+                        priceChart && (
+                            <div className="flex">
 
-                    <div className="flex">
-                        <img src="" alt ="Arrow down"/>
-                        <span className="up"></span>
-                    </div>
+                                {
+                                    priceChart.lastPriceChange == '+' ?(
+                                        <img src={arrowUp} alt="Arrow up" />
+                                    ) : (
+                                        <img src={arrowDown} alt="Arrow down" />
+                                    )
+                                } 
+                                <span className="up">{priceChart.lastPrice}</span>
+                            </div>
+                        )
+                    }
                 </div>
             </div>
 
             {
                 !account ? (
-                    <Banner text="Please connect with MetaMask"/>
+                    <Banner text="Please connect with MetaMask" />
                 ) : (
-                    <Chart 
-                    type = "candlestick"
-                    options= {options}
-                    series={series}
-                    width="100%"
-                    height="100%"
+                    <Chart
+                        type="candlestick"
+                        options={options}
+                        series={priceChart ? priceChart.series : defaultSeries}
+                        width="100%"
+                        height="100%"
                     />
                 )
             }

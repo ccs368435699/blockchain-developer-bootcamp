@@ -119,29 +119,40 @@ export const priceChartSelector = createSelector(
 
         orders = orders.filter((o) => o.tokenGet === tokens[0].address || o.tokenGet === tokens[1].address);
         orders = orders.filter((o) => o.tokenGive === tokens[0].address || o.tokenGive === tokens[1].address)
-        
-        orders = orders.sort((a, b)=>a.timestamp - b.timestamp);
+
+        orders = orders.sort((a, b) => a.timestamp - b.timestamp);
         //
-        orders = orders.map((o)=>decorateOrder(o, tokens));
-        orders = groupBy(orders, (o)=>moment.unix(o.timestamp).startOf('hour').format());
-        const hours = Object.keys(orders);
+        orders = orders.map((o) => decorateOrder(o, tokens));
+        // orders = groupBy(orders, (o) => moment.unix(o.timestamp).startOf('hour').format());
+        // const hours = Object.keys(orders);
 
-        const grapData = hours.map((hour)=>{
+        // const grapData = hours.map((hour) => {
 
-            const group = orders[hour];
+        //     const group = orders[hour];
 
-            const open = group[0];
-            const high = maxBy(group, 'tokenPrice');
-            const low = minBy(group, 'tokenPrice');
-            const close = group[group.length - 1];
-            return {
-                x: new Date(hour),
-                y: [open.tokenPrice, high.tokenPrice, low.tokenPrice, close.tokenPrice]
-            }
-        })
+        //     const open = group[0];
+        //     const high = maxBy(group, 'tokenPrice');
+        //     const low = minBy(group, 'tokenPrice');
+        //     const close = group[group.length - 1];
+        //     return {
+        //         x: new Date(hour),
+        //         y: [open.tokenPrice, high.tokenPrice, low.tokenPrice, close.tokenPrice]
+        //     }
+        // })
+        let secondLastOrder, lastOrder;
+        [secondLastOrder, lastOrder] = orders.slice(orders.length-2, orders.length);
+        const lastPrice = get(lastOrder, 'tokenPrice', 0);
+        const secondLastPrice = get (secondLastOrder, 'tokenPrice', 0);
 
-        return grapData;
-        
+
+        return ({            
+            lastPrice,
+            lastPriceChange: (lastPrice >= secondLastPrice ? '+' : '-'),
+            series: [{
+                data: buildGraphData(orders)
+            }]
+        });
+
         // console.log(1, {
         //     series: [{
         //         data: grapData
@@ -150,6 +161,24 @@ export const priceChartSelector = createSelector(
     }
 )
 
-const buildGraphData = (orders)=>{
-    
+const buildGraphData = (orders) => {
+
+    orders = groupBy(orders, (o) => moment.unix(o.timestamp).startOf('hour').format());
+    const hours = Object.keys(orders);
+
+    const grapData = hours.map((hour) => {
+
+        const group = orders[hour];
+
+        const open = group[0];
+        const high = maxBy(group, 'tokenPrice');
+        const low = minBy(group, 'tokenPrice');
+        const close = group[group.length - 1];
+        return {
+            x: new Date(hour),
+            y: [open.tokenPrice, high.tokenPrice, low.tokenPrice, close.tokenPrice]
+        }
+    })
+
+    return grapData
 }

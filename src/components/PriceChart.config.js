@@ -74,6 +74,8 @@ export const options = {
     }
 }
 
+export const defaultSeries = []
+
 export const series = [
     {
         data: [
