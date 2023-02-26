@@ -101,9 +101,9 @@ export const exchange = (state = DEFAULT_EXCHANE_STATE, action) => {
         case 'FILLED_ORDERS_LOADED': 
             return {
                 ...state,
-                filledOrder: {
+                filledOrders: {
                     load: true,
-                    data: action.filledOrder
+                    data: action.filledOrders
                 }
             }    
         case 'ALL_ORDERS_LOADED':
@@ -189,7 +189,7 @@ export const exchange = (state = DEFAULT_EXCHANE_STATE, action) => {
                     isPending: false,
                     isSuccessful: true
                 },
-                events: [action.event, ...action.events]
+                events: [action.event, ...state.events]
             }
         case 'NEW_ORDER_FAIL':
             return {

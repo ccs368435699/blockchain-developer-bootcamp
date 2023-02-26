@@ -7,7 +7,7 @@ contract Token {
     string public symbol;
 
     uint256 public decimals = 18;
-    uint256 public totalSupply = 1000000*(10**decimals);
+    uint256 public totalSupply;
 
     // track Balances
     mapping(address => uint256) public balanceOf;
@@ -73,9 +73,9 @@ contract Token {
 
     function transferFrom(address _from, address _to, uint256 _value) 
         public 
-        returns(bool success){
+        returns(bool success){         
         // check approval 
-        require(_value<=balanceOf[_from], 'insufficient balance');
+        require(_value <=balanceOf[_from], 'insufficient balance');
         require(_value <= allowance[_from][msg.sender], 'insufficient allowance');
         
         //
