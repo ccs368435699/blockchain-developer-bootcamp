@@ -25,7 +25,7 @@ const PriceChart = () => {
                             <div className="flex">
 
                                 {
-                                    priceChart.lastPriceChange == '+' ?(
+                                    priceChart.lastPriceChange === '+' ?(
                                         <img src={arrowUp} alt="Arrow up" />
                                     ) : (
                                         <img src={arrowDown} alt="Arrow down" />
