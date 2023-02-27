@@ -42,7 +42,7 @@ async function main() {
     // user1 trannsfers 10000 mETH ...
     let transaction, result;
     transaction = await mETH.connect(sender).transfer(receiver.address, amount);
-    result = await transaction.wait();         
+    result = await transaction.wait();           
     console.log(`Transferred ${amount} tokens from ${sender.address} to ${receiver.address} \n`)
 
     // Set up exchange users
@@ -57,7 +57,7 @@ async function main() {
 
     // user1 deposits 10,000 DApp ...
     transaction = await exchange.connect(user1).depositToken(DApp.address, amount);
-    await transaction.wait(1);
+    await transaction.wait();
     console.log(`Deposited ${amount} tokens from ${user1.address} \n`)  
 
     // user2 approves 10,000 mETH ...
@@ -81,25 +81,29 @@ async function main() {
     console.log(`Make order from ${user1.address}`);
  
 
-    // User1 cancels order    
+    // User1 cancels order     
     orderId = result.events[0].args.id;
     transaction = await exchange.connect(user1).cancelOrder(orderId);
     result = await transaction.wait();
     console.log(`Cancelled order from ${user1.address}`)
 
    // Wait 1 second
-   await wait(1)
+    await wait(1)
 
-    /////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////
     //  Seed Filled Orders
     //
-    // User 1 makes order
+    // User 1 makes order   
     transaction = await exchange.connect(user1).makeOrder(mETH.address, tokens(100), DApp.address, tokens(10))
     result = await transaction.wait();
     console.log(`Make another order from ${user1.address}`)   
 
-    // User 2 Fills order     
-    orderId = result.events[0].args.id + 1;
+    // User 2 Fills order        
+    orderId = result.events[0].args.id;
+    orderId = orderId.add(1)
+
+    console.log('orderCount:', orderId, await exchange.orderCount())
+    
     transaction = await exchange.connect(user2).fillOrder(orderId);
     result = await transaction.wait();
     console.log(`Filled the order from ${user1.address}`)
@@ -113,7 +117,11 @@ async function main() {
 
     // User 2 Fills another order
     
-    orderId = result.events[0].args.id + 2;
+    // orderId = result.events[0].args.id;
+    orderId = orderId.add(1);
+
+    console.log('orderCount:', orderId, await exchange.orderCount())
+
     transaction = await exchange.connect(user2).fillOrder(orderId);
     result = await transaction.wait();
     console.log(`Filled the order from ${user1.address}`)

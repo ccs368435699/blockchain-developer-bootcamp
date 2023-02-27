@@ -21,6 +21,7 @@ import OrderBook from './OrderBook';
 import PriceChart from './PriceChart';
 import Trades from './Trade';
 import { useDispatch } from 'react-redux';
+import Tranctions from './MyTransations';
 
 
 
@@ -82,6 +83,7 @@ function App() {
           {/* PriceChart. */}
           <PriceChart />
           {/* Transaction. */}
+          <Tranctions />
 
           {/* Trades. */}
           <Trades />

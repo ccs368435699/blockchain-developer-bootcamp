@@ -9,7 +9,6 @@ const Trades = () => {
     const filledOrders = useSelector(filledOrdersSelector);
 
 
-console.log(1,filledOrders)
     return (
         <div className="component exchange__trades">
             <div className="component__header flex-between">
