@@ -74,6 +74,10 @@ const DEFAULT_EXCHANE_STATE = {
         loaded: false,
         data: []
     },
+    cancelledOrders: {
+        loaded: false,
+        data: []
+    },
     transferInProgress: false
 }
 
@@ -87,7 +91,7 @@ export const exchange = (state = DEFAULT_EXCHANE_STATE, action) => {
                 loaded: true,
                 contract: action.exchange
             }
-            // ORDERS LOADED (CANCELLED, FILLED)
+        // ORDERS LOADED (CANCELLED, FILLED)
         case 'CANCELLED_ORDERS_LOADED':
             return {
                 ...state,
@@ -97,14 +101,14 @@ export const exchange = (state = DEFAULT_EXCHANE_STATE, action) => {
                 }
             }
 
-        case 'FILLED_ORDERS_LOADED': 
+        case 'FILLED_ORDERS_LOADED':
             return {
                 ...state,
                 filledOrders: {
                     load: true,
                     data: action.filledOrders
                 }
-            }    
+            }
         case 'ALL_ORDERS_LOADED':
             return {
                 ...state,
@@ -113,6 +117,48 @@ export const exchange = (state = DEFAULT_EXCHANE_STATE, action) => {
                     data: action.allOrders
                 }
             }
+        // -------------------------------------------------------
+        // CANCELLONG ORDERS
+        case 'ORDER_CANCEL_REQUEST':
+            return {
+                ...state,
+                transaction: {
+                    transactionType: 'Cancel',
+                    isPending: true,
+                    isSuccessful: false
+                }
+            }
+        case 'ORDER_CANCEL_SUCCESS':
+            return {
+                ...state,
+                transaction: {
+                    transactionType: 'Cancel',
+                    isPending: false,
+                    isSuccessful: true
+                },
+                cancelledOrders: {
+                    ...state.cancelledOrders,
+                    data: [
+                        ...state.cancelledOrders.data,
+                        action.order
+                    ],
+                    events: [
+                        action.event, ...state.events
+                    ]
+                }
+            }
+        case 'ORDER_CANCEL_FAIL':
+            return {
+                ...state,
+                transaction: {
+                    transactionType: 'Cancel',
+                    isPending: false,
+                    isSuccessful: false,
+                    isError: true
+                }
+            }
+        // ---------------------------------------------------------------
+        // BALANCE CASS
         case 'EXCHANGE_TOKEN_1_BALANCE_LOADED':
 
             return {

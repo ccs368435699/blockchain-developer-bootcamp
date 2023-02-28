@@ -19,13 +19,35 @@ const openOrders = state => {
 
     const openOrders = reject(all, (order) => {      
         const orderFilled = filled.some((o) => o.id.toString() === order.id.toString());
-        const orderCancelled = cancelled.find((o) => o.id.toString() === order.id.toString());
+        const orderCancelled = cancelled.some((o) => o.id.toString() === order.id.toString());
         
         return (orderFilled || orderCancelled);
     })    
 
     return openOrders
 }
+
+// -------------------------------------------------------------------------
+// MY OPENFILLEDORDERS CANCELLED
+export const myFilledOrdersSelector =  createSelector(
+    account,
+    tokens,
+    filledOrders,
+    (account, tokens, orders)=>{        
+        if(!tokens[0] || !tokens[1]) { return }; 
+
+        orders = orders.filter((o)=>o.user !== account);
+        orders = orders.filter((o) => o.tokenGet === tokens[0].address || o.tokenGet === tokens[1].address);
+        orders = orders.filter((o) => o.tokenGive === tokens[0].address || o.tokenGive === tokens[1].address)
+       
+        orders = decorateMyOpenOrders(orders, tokens);
+
+        orders = orders.sort((a,b)=>b.timestamp - a.timestamp);
+
+        return orders;
+    }
+) 
+
 // --------------------------------------------------------------------------
 // MY OPEN ORDERS
 export const myOpenOrdersSelector = createSelector(

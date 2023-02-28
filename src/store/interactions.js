@@ -60,6 +60,11 @@ export const loadExchange = async (provider, address, dispatch)=>{
 }
 
 export const subscribeToEvents = (exchange, dispatch)=>{
+    exchange.on('Cancel', async (id, user, tokenGet, amountGet, tokenGive, amountGive, timestamp, event)=>{
+        const order = event.args;        
+        dispatch({type: 'ORDER_CANCEL_SUCCESS'}, order, event)
+    })
+
     exchange.on('Deposit', (token, user, amount, balance, event)=>{
         // Notify app think transfer was successful!
         dispatch({type: 'TRANSFER_SUCCESS', event})
@@ -217,7 +222,6 @@ export const cancelOrder = async (provider, exchange, order, dispatch)=>{
     } catch(error){
         dispatch({type: 'ORDER_CANCEL_FAIL'});
     }
-
 
 }
 
