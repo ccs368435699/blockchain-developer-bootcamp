@@ -3,13 +3,33 @@ import { myOpenOrdersSelector } from '../store/selectors';
 
 import sort from '../assets/sort.svg';
 import Banner from './Banner'
+import { useState } from 'react';
 
 
 const MyTranctions = ()=>{
-
+    const [showMyOrders, setShowMyOrders] = useState(true);
     const symbols = useSelector(state=>state.tokens.symbols);
-    const myOpenOrders = useSelector(myOpenOrdersSelector);
-    console.log('MyTranctions', myOpenOrders)
+    const myOpenOrders = useSelector(myOpenOrdersSelector); 
+    const myFilledOrders = useSelector(myFilledOrdersSelector);  
+
+    const tradeRef = useRef(null);
+    const orderRef = useRef(null);
+
+    const tabHandler = (e) =>{
+        if(e.target.className !== order.current.className){
+            e.target.className = 'tab tab--active';
+            orderRef.current.className = 'tab';
+            setShowMyOrders(false);
+        } else {
+            e.target.className = 'tab tab--active';
+            tradeRef.current.className = 'tab';
+            setShowMyOrders(true);
+        }
+    }
+
+    const cancelHandler = (order)=>{
+        console.log('cancel order', order)
+    }
 
     return (
         <div className="component exchange__transactions">
@@ -41,7 +61,7 @@ const MyTranctions = ()=>{
                                         <tr key = {index}>
                                             <td style={{color: `${order.orderTypeClass}`}}>{order.token0Amount}</td>
                                             <td>{order.tokenPrice}</td>
-                                            <td>{/*Cancel order*/}</td>
+                                            <td><button className='buttom--sm' onClick={()=>{cancelHandler(order)}}>Cancel</button></td>
                                         </tr>
                                     )
                                 })

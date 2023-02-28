@@ -19,10 +19,9 @@ import Balance from './Balance';
 import Order from './Order';
 import OrderBook from './OrderBook';
 import PriceChart from './PriceChart';
-import Trades from './Trade';
+import Trades from './Trades';
 import { useDispatch } from 'react-redux';
 import Tranctions from './MyTransations';
-
 
 
 

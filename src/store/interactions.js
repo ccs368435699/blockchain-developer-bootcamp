@@ -204,5 +204,23 @@ export const makeSellOrder = async (provider, exchange, tokens, order, dispatch)
    
 }
 
+// ------------------------------------------------------------------
+// CANCEL ORDER 
+export const cancelOrder = async (provider, exchange, order, dispatch)=>{
+
+    dispatch({type: 'ORDER_CANCEL_REQUEST'});
+
+    try {
+        const signer = await provider.getSigner();
+        const transaction = await exchange.connect(signer).cancelOrder(order.id);
+        await transaction.wait()
+    } catch(error){
+        dispatch({type: 'ORDER_CANCEL_FAIL'});
+    }
+
+
+}
+
+
 
 
