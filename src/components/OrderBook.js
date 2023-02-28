@@ -12,7 +12,7 @@ const OrderBook = () => {
             <div className="component__header flex-between">
                 <h2>Order Book</h2>
             </div>
-            <div className="flex">
+            <div className="flex exchange__orderbook">
                 {
                     (!orderBook || orderBook.sellOrders.length === 0) ? (
                         <p className="flex-center">No Sell Order</p>
@@ -76,10 +76,6 @@ const OrderBook = () => {
                         </table>
                     )
                 }
-
-
-
-
             </div>
         </div>
     )

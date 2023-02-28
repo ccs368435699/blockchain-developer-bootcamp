@@ -67,7 +67,7 @@ const MyTranctions = () => {
                                             <tr key={index}>
                                                 <td style={{ color: `${order.orderTypeClass}` }}>{order.token0Amount}</td>
                                                 <td>{order.tokenPrice}</td>
-                                                <td><button className='buttom--sm' onClick={() => { cancelHandler(order) }}>Cancel</button></td>
+                                                <td><button className='button--sm' onClick={() => { cancelHandler(order) }}>Cancel</button></td>
                                             </tr>
                                         )
                                     })
