@@ -13,19 +13,16 @@ const GREEN = '#25CE8F';
 const RED = '#F45353';
 
 const openOrders = state => {
-    const all = allOrders(state);
+    const all = allOrders(state);    
     const filled = filledOrders(state);
-    const cancelled = cancelledOrders(state);
+    const cancelled = cancelledOrders(state);  
 
-    const openOrders = reject(all, (order) => {
-       
-        const orderFilled = filled.find((o) => o.id.toString() === order.id.toString());
+    const openOrders = reject(all, (order) => {      
+        const orderFilled = filled.some((o) => o.id.toString() === order.id.toString());
         const orderCancelled = cancelled.find((o) => o.id.toString() === order.id.toString());
-
+        
         return (orderFilled || orderCancelled);
-    })   
-
-    console.log('openOrders:', openOrders)
+    })    
 
     return openOrders
 }
@@ -36,19 +33,17 @@ export const myOpenOrdersSelector = createSelector(
     tokens,
     openOrders,
     (account, tokens, orders)=>{        
-        if(!tokens[0] || !tokens[1]) { return };
-        orders = orders.filter((o)=>o.user === account);
-
-        
+        if(!tokens[0] || !tokens[1]) { return };        
+        orders = orders.filter((o)=>o.user === account);       
+       
         orders = orders.filter((o) => o.tokenGet === tokens[0].address || o.tokenGet === tokens[1].address);
         orders = orders.filter((o) => o.tokenGive === tokens[0].address || o.tokenGive === tokens[1].address)
-
+       
         orders = decorateMyOpenOrders(orders, tokens);
 
-        orders =orders.sort((a,b)=>b.timestamp - a.timestamp);
-console.log('my orders:', orders)
-        return orders;
+        orders = orders.sort((a,b)=>b.timestamp - a.timestamp);
 
+        return orders;
     }
 )
 

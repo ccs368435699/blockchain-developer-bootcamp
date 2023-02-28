@@ -118,7 +118,7 @@ contract Exchange {
         orderCount = orderCount + 1;
 
         orders[orderCount] = _Order(
-            1,
+            orderCount,
             msg.sender,
             _tokenGet,
             _amountGet,
@@ -129,7 +129,7 @@ contract Exchange {
 
         // Emit event
         emit Order(
-            1,
+            orderCount,
             msg.sender,
             _tokenGet,
             _amountGet,

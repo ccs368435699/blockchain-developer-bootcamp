@@ -117,8 +117,12 @@ export const loadAllOrders = async (provider, exchange, dispatch)=>{
 
 
     // Fetch all orders
-    const orderStream = await exchange.queryFilter('Order', 0, block);
-    const allOrders = orderStream.map(event => event.args);
+    const orderStream = await exchange.queryFilter('Order', 0, block);    
+    const allOrders = orderStream.map(event => {
+
+        return event.args
+    });
+    
 
     dispatch({type: 'ALL_ORDERS_LOADED', allOrders});
 }

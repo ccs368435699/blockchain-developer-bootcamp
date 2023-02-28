@@ -82,7 +82,7 @@ async function main() {
  
 
     // User1 cancels order     
-    orderId = result.events[0].args.id;
+    orderId = result.events[0].args.id;   
     transaction = await exchange.connect(user1).cancelOrder(orderId);
     result = await transaction.wait();
     console.log(`Cancelled order from ${user1.address}`)
@@ -99,11 +99,8 @@ async function main() {
     console.log(`Make another order from ${user1.address}`)   
 
     // User 2 Fills order        
-    orderId = result.events[0].args.id;
+    // orderId = result.events[0].args.id;    
     orderId = orderId.add(1)
-
-    console.log('orderCount:', orderId, await exchange.orderCount())
-    
     transaction = await exchange.connect(user2).fillOrder(orderId);
     result = await transaction.wait();
     console.log(`Filled the order from ${user1.address}`)
@@ -115,13 +112,9 @@ async function main() {
     result = await transaction.wait();
     console.log(`Make the more another order from ${user1.address}`)
 
-    // User 2 Fills another order
-    
-    // orderId = result.events[0].args.id;
-    orderId = orderId.add(1);
-
-    console.log('orderCount:', orderId, await exchange.orderCount())
-
+    // User 2 Fills another order    
+    // orderId = result.events[0].args.id //??? id始终为1; 
+    orderId = orderId.add(1);    
     transaction = await exchange.connect(user2).fillOrder(orderId);
     result = await transaction.wait();
     console.log(`Filled the order from ${user1.address}`)
