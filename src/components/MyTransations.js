@@ -81,11 +81,11 @@ const MyTranctions = () => {
                             <Banner text="No my filled orders" />
                         ) : (
                             <table>
-                                <thead>
+                                <thead>                                
                                     <tr>
-                                        <th>{symbols && symbols[0]}</th>
-                                        <th>{symbols && symbols[0] / symbols && symbols[1]}<img src={sort} alt="Sort" /></th>
-                                        <th></th>
+                                        <th>Time<img src={sort} alt="Sort"/></th>
+                                        <th>{symbols && symbols[0]}<img src={sort} alt="Sort"/></th>
+                                        <th>{symbols && symbols[0]} / {symbols && symbols[1]}<img src={sort} alt="Sort" /></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -94,6 +94,7 @@ const MyTranctions = () => {
 
                                             return (
                                                 <tr key={index}>
+                                                    <td>{order.formattedTimestamp}</td>
                                                     <td style={{ color: `${order.orderTypeClass}` }}>{order.token0Amount}</td>
                                                     <td>{order.tokenPrice}</td>
                                                     {/* <td><button className='buttom--sm' onClick={() => { cancelHandler(order) }}>Cancel</button></td> */}

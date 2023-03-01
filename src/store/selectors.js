@@ -19,7 +19,7 @@ const openOrders = state => {
 
     const openOrders = reject(all, (order) => {      
         const orderFilled = filled.some((o) => o.id.toString() === order.id.toString());
-        const orderCancelled = cancelled.some((o) => o.id.toString() === order.id.toString());
+        const orderCancelled = cancelled.some((o) => o.id.toString() === order.id.toString());//??有时id不能读出，重刷？
         
         return (orderFilled || orderCancelled);
     })    
@@ -36,7 +36,7 @@ export const myFilledOrdersSelector =  createSelector(
     (account, tokens, orders)=>{        
         if(!tokens[0] || !tokens[1]) { return }; 
 
-        orders = orders.filter((o)=>o.user !== account);
+        orders = orders.filter((o)=>o.user == account);
         orders = orders.filter((o) => o.tokenGet === tokens[0].address || o.tokenGet === tokens[1].address);
         orders = orders.filter((o) => o.tokenGive === tokens[0].address || o.tokenGive === tokens[1].address)
        
@@ -232,11 +232,11 @@ const decorateOrderBookOrder = (order, tokens) => {
 // -----------------------------------------------------------------------
 // PRICE CHART 
 export const priceChartSelector = createSelector(
-    filledOrders,
-    // allOrders,
+    filledOrders,    
     tokens,
     (orders, tokens) => {        
-        if (!tokens[0] || !tokens[1]) { return };
+        if (!tokens[0] || !tokens[1]) { return };               
+
         orders = orders.filter((o) => o.tokenGet === tokens[0].address || o.tokenGet === tokens[1].address);
         orders = orders.filter((o) => o.tokenGive === tokens[0].address || o.tokenGive === tokens[1].address)
 

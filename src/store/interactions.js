@@ -61,8 +61,15 @@ export const loadExchange = async (provider, address, dispatch)=>{
 
 export const subscribeToEvents = (exchange, dispatch)=>{
     exchange.on('Cancel', async (id, user, tokenGet, amountGet, tokenGive, amountGive, timestamp, event)=>{
+       
         const order = event.args;        
-        dispatch({type: 'ORDER_CANCEL_SUCCESS'}, order, event)
+        dispatch({type: 'ORDER_CANCEL_SUCCESS', order, event} )
+    })
+
+    exchange.on('Trade', async (id, user, tokenGet, amountGet, tokenGive, amountGive, creator, timestamp, event)=>{
+       
+        const order = event.args; 
+        dispatch({type: 'ORDER_FILL_SUCCESS', order, event})
     })
 
     exchange.on('Deposit', (token, user, amount, balance, event)=>{
@@ -120,7 +127,6 @@ export const loadAllOrders = async (provider, exchange, dispatch)=>{
 
     dispatch({type: 'FILLED_ORDERS_LOADED', filledOrders})
 
-
     // Fetch all orders
     const orderStream = await exchange.queryFilter('Order', 0, block);    
     const allOrders = orderStream.map(event => {
@@ -170,7 +176,7 @@ export const makeBuyOrder = async (provider, exchange, tokens, order, dispatch)=
   
     
     const tokenGet = tokens[0].address;
-    const amountGet =ethers.utils.parseUnits(order.amount, 18);
+    const amountGet = ethers.utils.parseUnits(order.amount, 18);
     const tokenGive = tokens[1].address;
     const amountGive = ethers.utils.parseUnits((order.amount * order.price).toString(), 18);
 
@@ -219,10 +225,27 @@ export const cancelOrder = async (provider, exchange, order, dispatch)=>{
         const signer = await provider.getSigner();
         const transaction = await exchange.connect(signer).cancelOrder(order.id);
         await transaction.wait()
+        dispatch({type: 'ORDER_CANCEL_SUCCESS', order});
     } catch(error){
         dispatch({type: 'ORDER_CANCEL_FAIL'});
     }
 
+}
+
+// ------------------------------------------------------------------
+// FILL ORDER
+
+export const fillOrder = async (provider, exchange, order, dispatch)=>{
+    dispatch({type: 'ORDER_FILL_REQUEST'});
+
+    try {
+        const signer = await provider.getSigner();
+        const transaction = await exchange.connect(signer).fillOrder(order.id);
+        await transaction.wait();
+        dispatch({type: 'ORDER_FILL_SUCCESS', order});
+    } catch(error){
+        dispatch({type: 'ORDER_FILL_FAIL'});
+    }
 }
 
 

@@ -21,7 +21,7 @@ const PriceChart = () => {
                 <div className="flex">
                     <h2>{symbols && `${symbols[0]}/${symbols[1]}`}</h2>
                     {
-                        priceChart && (
+                        priceChart && (priceChart.length !==0) && (
                             <div className="flex">
 
                                 {

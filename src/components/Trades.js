@@ -23,7 +23,7 @@ const Trades = () => {
                     <tr>
                         <th>Time<img src={sort} alt="Sort"/></th>
                         <th>{symbols && symbols[0]}<img src={sort} alt="Sort"/></th>
-                        <th>{symbols && symbols[1]}<img src={sort} alt="Sort"/></th>
+                        <th>{symbols && symbols[0]} / {symbols && symbols[1]}<img src={sort} alt="Sort"/></th>
                     </tr>
                 </thead>
                 <tbody>

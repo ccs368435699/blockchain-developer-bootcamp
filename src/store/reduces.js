@@ -1,3 +1,4 @@
+import { act } from "react-dom/test-utils"
 
 
 export const provider = (state = {}, action) => {
@@ -72,6 +73,9 @@ const DEFAULT_EXCHANE_STATE = {
     transaction: {},
     allOrders: {
         loaded: false,
+        data: []
+    },
+    filledOrders: {
         data: []
     },
     cancelledOrders: {
@@ -157,6 +161,53 @@ export const exchange = (state = DEFAULT_EXCHANE_STATE, action) => {
                     isError: true
                 }
             }
+        // ---------------------------------------------------------------
+        // FILLING ORDERS
+        case 'ORDER_FILL_REQUEST': 
+            return {
+                ...state,
+                transaction: {
+                    transactionType: 'Fill Order',
+                    isPending: true,
+                    isSuccessful: false
+                }
+            }
+
+        case 'ORDER_FILL_SUCCESS': 
+        
+            index = state.filledOrders.data.findIndex(order =>order.id.toString()===action.order.id.toString())
+          
+            if(index ===-1){
+                data = [...state.filledOrders.data, action.order]
+            } else {
+                data = state.filledOrders.data
+            }
+
+            return {
+                ...state, 
+                transaction: {
+                    transactionType: 'Fill Order',
+                    isPending: false,
+                    isSuccessful: true
+                },
+                filledOrders: {
+                    ...state.filledOrders,
+                    data
+                },
+                events: [action.event, ...state.events]
+            }
+        
+        case 'ORDER_FILL_FAIL': 
+            return {
+                ...state,
+                transaction: {
+                    transactionType: 'Fill Order',
+                    isPending: false,
+                    isSuccessful: false,
+                    isError: true
+                }
+            }
+
         // ---------------------------------------------------------------
         // BALANCE CASS
         case 'EXCHANGE_TOKEN_1_BALANCE_LOADED':
