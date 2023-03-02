@@ -77,7 +77,7 @@ const MyTranctions = () => {
                         </table>
                     )
                     ) : (
-                        (myFilledOrders && myFilledOrders.length == 0) ? (
+                        (myFilledOrders && myFilledOrders.length === 0) ? (
                             <Banner text="No my filled orders" />
                         ) : (
                             <table>

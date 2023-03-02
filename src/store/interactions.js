@@ -150,12 +150,14 @@ export const transferTokens = async (provider, exchange, transferType, token, am
         const signer = await provider.getSigner();
         const amountToTransfer = ethers.utils.parseUnits(amount.toString(), 'ether');       
         
-        if(transferType = 'Deposit'){
+        if(transferType === 'Deposit'){
             transaction = await token.connect(signer).approve(exchange.address, amountToTransfer);
             transaction.wait();    
             transaction = await exchange.connect(signer).depositToken(token.address, amountToTransfer);
-            transaction.wait();
-            dispatch({type: 'TRANSFER_SUCCESS'})
+            const result = await transaction.wait();
+            const event = result.events[1];
+            
+            dispatch({type: 'TRANSFER_SUCCESS', event})
         } else {
             transaction = await exchange.connect(signer).withdrawToken(token.address, amountToTransfer);
             transaction.wait();
@@ -197,10 +199,10 @@ export const makeBuyOrder = async (provider, exchange, tokens, order, dispatch)=
 export const makeSellOrder = async (provider, exchange, tokens, order, dispatch)=>{
   
     
-    const tokenGet = tokens[1].address;
-    const amountGet =ethers.utils.parseUnits((order.amount * order.price).toString(), 18);
-    const tokenGive = tokens[0].address;
-    const amountGive = ethers.utils.parseUnits((order.amount).toString(), 18);
+    // const tokenGet = tokens[1].address;
+    // const amountGet =ethers.utils.parseUnits((order.amount * order.price).toString(), 18);
+    // const tokenGive = tokens[0].address;
+    // const amountGive = ethers.utils.parseUnits((order.amount).toString(), 18);
 
     // dispatch({type: 'NEW_ORDER_REQUEST'});
 

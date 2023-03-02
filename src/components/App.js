@@ -22,6 +22,7 @@ import PriceChart from './PriceChart';
 import Trades from './Trades';
 import { useDispatch } from 'react-redux';
 import Tranctions from './MyTransations';
+import Alert from './Alert';
 
 
 
@@ -91,6 +92,9 @@ function App() {
           <OrderBook />
         </section>
       </main>
+
+      <Alert />
+
     </div>
   );
 }
